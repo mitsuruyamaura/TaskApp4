@@ -16,7 +16,7 @@ import io.realm.Realm;
 public class TaskAlarmReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVISE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         //  SDKバージョンが26以上の場合、チャネルを設定する必要がある
         if (Build.VERSION.SDK_INT >= 26) {
