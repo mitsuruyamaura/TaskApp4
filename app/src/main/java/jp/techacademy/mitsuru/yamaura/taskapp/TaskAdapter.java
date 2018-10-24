@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import andorid.widget.TextView;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,7 +51,7 @@ public class TaskAdapter extends BaseAdapter {
         TextView textView2 = (TextView) convertView.findViewById(android.R.id.text2);
 
         //  後でTaskクラスから情報を取得するように変更する
-        textView1.setText(mTaskList.get(position).getDate());
+        textView1.setText(mTaskList.get(position).getTitle());
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.JAPANESE);
         Date date = mTaskList.get(position).getDate();
