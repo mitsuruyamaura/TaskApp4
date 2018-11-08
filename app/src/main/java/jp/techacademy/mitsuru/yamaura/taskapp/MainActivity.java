@@ -10,10 +10,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Button;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    EditText mEditText;
+    Button mEqualButton;
     private ListView mListView;
     private TaskAdapter mTaskAdapter;
 
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         //  Realmの設定
         mRealm = Realm.getDefaultInstance();
         mRealm.addChangeListener(mRealmListener);
+
 
         //  ListViewの設定
         mTaskAdapter = new TaskAdapter(MainActivity.this);
@@ -74,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 //  タスクを削除する
-
                 final Task task = (Task) parent.getAdapter().getItem(position);
 
                 //  削除確認用のダイアログを表示する
@@ -116,12 +122,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
         reloadListView();
+
+
+        //  検索ボタンの設定
+        mEditText = (EditText) findViewById(R.id.equal_edit_text);
+        mEqualButton = (Button) findViewById(R.id.equal_button);
+        mEqualButton.setOnClickListener(this);
+
+        @Override
+                mEqualButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                query.equalTo("category");
+            }
     }
 
     private void reloadListView(){
 
         //  Realmデータベースから、「すべてのデータを取得して新しい日時順に並べた結果」を表示
-        RealmResults<Task> taskRealmResults = mRealm.where(Task.class).findAll().sort("Date",Sort.DESCENDING);
+        RealmResults<Task> taskRealmResults = mRealm.where(Task.class).findAll().sort("date",Sort.DESCENDING);
 
         //  上記の結果をTasklistとしてセットする
         mTaskAdapter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
@@ -132,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         //  表示を更新するためにアダプターにデータが変更されたことを知らせる
         mTaskAdapter.notifyDataSetChanged();
     }
+
 
     @Override
     protected void onDestroy(){
