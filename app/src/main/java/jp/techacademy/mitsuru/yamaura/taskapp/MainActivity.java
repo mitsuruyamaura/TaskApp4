@@ -127,14 +127,25 @@ public class MainActivity extends AppCompatActivity {
         //  検索ボタンの設定
         mEditText = (EditText) findViewById(R.id.equal_edit_text);
         mEqualButton = (Button) findViewById(R.id.equal_button);
-        mEqualButton.setOnClickListener(this);
 
-        @Override
-                mEqualButton.setOnClickListener(new View.OnClickListener() {
+        mEqualButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            //  検索をして、その結果をソートする
             public void onClick(View view) {
-                query.equalTo("category");
+                RealmResults<Task> taskRealmResults = mRealm.where(Task.class)
+                .equalTo("category",mEditText.getText().toString())
+                .findAll().sort("date",Sort.DESCENDING);
+
+                //  上記の結果をTasklistとしてセットする
+                mTaskAdapter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
+
+                //  TaskのListView用のアダプタに渡す
+                mListView.setAdapter(mTaskAdapter);
+
+                //  表示を更新するためにアダプターにデータが変更されたことを知らせる
+                mTaskAdapter.notifyDataSetChanged();
             }
+        });
     }
 
     private void reloadListView(){
